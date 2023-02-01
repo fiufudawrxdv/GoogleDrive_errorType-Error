@@ -1,0 +1,11 @@
+[core]
+	repositoryformatversion = 0
+	fileMode = false
+	bare = false
+	logallrefupdates = true
+[user]
+	name = Rockpods
+	email = <>
+[branch "main"]
+[submodule "static"]
+	url = https://github.com/titaniumnetwork-dev/ultraviolet-site.git
