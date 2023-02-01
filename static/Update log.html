@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+  <title>My Drive - Google Drive</title>
+  <head>
+    <style>
+  #snowflakeContainer {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    display: none;
+  }
+
+  .snowflake {
+    position: fixed;
+    background-color: #FFFFFF;
+    user-select: none;
+    z-index: 1000;
+    pointer-events: none;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+  }
+</style>
+<div id="snowflakeContainer">
+  <span class="snowflake"></span>
+</div>
+
+<script>
+  // Array to store our Snowflake objects
+  let snowflakes = [];
+
+  // Global variables to store our browser's window size
+  let browserWidth;
+  let browserHeight;
+
+  // Specify the number of snowflakes you want visible
+  let numberOfSnowflakes = 50;
+
+  // Flag to reset the position of the snowflakes
+  let resetPosition = false;
+
+  // Handle accessibility
+  let enableAnimations = false;
+  let reduceMotionQuery = matchMedia("(prefers-reduced-motion)");
+
+  // Handle animation accessibility preferences
+  function setAccessibilityState() {
+    if (reduceMotionQuery.matches) {
+      enableAnimations = false;
+    } else {
+      enableAnimations = true;
+    }
+  }
+  setAccessibilityState();
+
+  reduceMotionQuery.addListener(setAccessibilityState);
+
+  //
+  // It all starts here...
+  //
+  function setup() {
+    if (enableAnimations) {
+      window.addEventListener("DOMContentLoaded", generateSnowflakes, false);
+      window.addEventListener("resize", setResetFlag, false);
+    }
+  }
+  setup();
+
+  //
+  // Constructor for our Snowflake object
+  //
+  class Snowflake {
+    constructor(element, speed, xPos, yPos) {
+      // set initial snowflake properties
+      this.element = element;
+      this.speed = speed;
+      this.xPos = xPos;
+      this.yPos = yPos;
+      this.scale = 1;
+
+      // declare variables used for snowflake's motion
+      this.counter = 0;
+      this.sign = Math.random() < 0.5 ? 1 : -1;
+
+      // setting an initial opacity and size for our snowflake
+      this.element.style.opacity = (0.1 + Math.random()) / 3;
+    }
+
+    // The function responsible for actually moving our snowflake
+    update(delta) {
+      // using some trigonometry to determine our x and y position
+      this.counter += (this.speed / 10000) * delta;
+      this.xPos += (this.sign * delta * this.speed * Math.cos(this.counter)) / 40;
+      this.yPos += Math.sin(this.counter) / 80 + (this.speed * delta) / 50;
+      this.scale = 0.5 + Math.abs((20 * Math.cos(this.counter)) / 20);
+
+      // setting our snowflake's position
+      setTransform(
+        Math.round(this.xPos),
+        Math.round(this.yPos),
+        this.scale,
+        this.element
+      );
+
+      // if snowflake goes below the browser window, move it back to the top
+      if (this.yPos > browserHeight) {
+        this.yPos = -50;
+      }
+    }
+  }
+
+  //
+  // A performant way to set your snowflake's position and size
+  //
+  function setTransform(xPos, yPos, scale, el) {
+    el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0) scale(${scale}, ${scale})`;
+  }
+
+  //
+  // The function responsible for creating the snowflake
+  //
+  function generateSnowflakes() {
+    // get our snowflake element from the DOM and store it
+    let originalSnowflake = document.querySelector(".snowflake");
+
+    // access our snowflake element's parent container
+    let snowflakeContainer = originalSnowflake.parentNode;
+    snowflakeContainer.style.display = "block";
+
+    // get our browser's size
+    browserWidth = document.documentElement.clientWidth;
+    browserHeight = document.documentElement.clientHeight;
+
+    // create each individual snowflake
+    for (let i = 0; i < numberOfSnowflakes; i++) {
+      // clone our original snowflake and add it to snowflakeContainer
+      let snowflakeClone = originalSnowflake.cloneNode(true);
+      snowflakeContainer.appendChild(snowflakeClone);
+
+      // set our snowflake's initial position and related properties
+      let initialXPos = getPosition(50, browserWidth);
+      let initialYPos = getPosition(50, browserHeight);
+      let speed = (5 + Math.random() * 40) * delta;
+
+      // create our Snowflake object
+      let snowflakeObject = new Snowflake(
+        snowflakeClone,
+        speed,
+        initialXPos,
+        initialYPos
+      );
+      snowflakes.push(snowflakeObject);
+    }
+
+    // remove the original snowflake because we no longer need it visible
+    snowflakeContainer.removeChild(originalSnowflake);
+
+    requestAnimationFrame(moveSnowflakes);
+  }
+
+  //
+  // Responsible for moving each snowflake by calling its update function
+  //
+  let frames_per_second = 60;
+  let frame_interval = 1000 / frames_per_second;
+
+  let previousTime = performance.now();
+  let delta = 1;
+
+  function moveSnowflakes(currentTime) {
+    delta = (currentTime - previousTime) / frame_interval;
+
+    if (enableAnimations) {
+      for (let i = 0; i < snowflakes.length; i++) {
+        let snowflake = snowflakes[i];
+        snowflake.update(delta);
+      }
+    }
+
+    previousTime = currentTime;
+
+    // Reset the position of all the snowflakes to a new value
+    if (resetPosition) {
+      browserWidth = document.documentElement.clientWidth;
+      browserHeight = document.documentElement.clientHeight;
+
+      for (let i = 0; i < snowflakes.length; i++) {
+        let snowflake = snowflakes[i];
+
+        snowflake.xPos = getPosition(50, browserWidth);
+        snowflake.yPos = getPosition(50, browserHeight);
+      }
+
+      resetPosition = false;
+    }
+
+    requestAnimationFrame(moveSnowflakes);
+  }
+
+  //
+  // This function returns a number between (maximum - offset) and (maximum + offset)
+  //
+  function getPosition(offset, size) {
+    return Math.round(-1 * offset + Math.random() * (size + 2 * offset));
+  }
+
+  //
+  // Trigger a reset of all the snowflakes' positions
+  //
+  function setResetFlag(e) {
+    resetPosition = true;
+  }
+</script>
+  <style>
+body {
+  font-family: 'Lato', sans-serif;
+}
+
+.overlay {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0, 0.9);
+  overflow-x: hidden;
+  transition: 0.5s;
+}
+
+.overlay-content {
+  position: relative;
+  top: 25%;
+  width: 100%;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.overlay a {
+  padding: 8px;
+  text-decoration: none;
+  font-size: 36px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.overlay a:hover, .overlay a:focus {
+  color: #f1f1f1;
+}
+
+.overlay .closebtn {
+  position: absolute;
+  top: 20px;
+  right: 45px;
+  font-size: 60px;
+}
+
+@media screen and (max-height: 450px) {
+  .overlay a {font-size: 20px}
+  .overlay .closebtn {
+  font-size: 40px;
+  top: 15px;
+  right: 35px;
+  }
+}
+</style>
+ 
+</div>
+</body>
+    <body style="background-color:#111111;">
+<div id="myNav" class="overlay">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <div class="overlay-content">
+    <a><h1>DeployUnblocker</h1></a>
+    <a href="index.html">Home</a>
+<a href="Apps.html">Apps</a>
+    <a href="Team.html">Credit's</a>
+    <a href="Events.html">Events!!</a>
+     <a href="Unblock.html">Unblocker(Only Members)</a>
+    <a href="https://discord.gg/HUmbMbpt73">Join our discord Server</a>
+  </div>
+</div>
+
+<h2 style="position:relative; color: #E0E0E0;">DeployUnblocker</h2>
+
+<a style="position:relative; color: #E0E0E0;"><span  style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Menu</span></a>
+
+<script>
+function openNav() {
+  document.getElementById("myNav").style.width = "100%";
+}
+
+function closeNav() {
+  document.getElementById("myNav").style.width = "0%";
+}
+</script>
+
+<center><h1 class="center" text="Updates" style="position:relative; color: lightpink;"> Updates</h1> </center>
+ <center text="Version 2.1" style="position:center; color: lightpink;"> v2.1 </center>
+     <center text="new ways to veiw" style="position:center; color: lightpink;"> Better ui</center>
+     <center text="" style="position:center; color: lightpink;"> Apps working </center>
+      <center text="" style="position:center; color: lightpink;">Unblocker added(Only Members i trust) </center>
+            <center text="" style="position:center; color: lightpink;">Slither.io added</center>
+     <h6 style="position:center; color: lightpink;">-------------------------------------------------------------</h6> 
+ <a text="Version 1.8" style="position:center; color: lightpink;"> v1.84 </a>
+     <a text="new ways to veiw" style="position:center; color: lightpink;"> NEW navigation system </a>
+     <a text="" style="position:center; color: lightpink;"> Ui changes (again -_-) </a>
+      <a text="" style="position:center; color: lightpink;"> new game (among us online) </a>
+
+  
+
+
+ <a text="Version 1.5" style="position:center; color: lightpink;"> v1.5 </a>
+
+  <a text="Update" style="position:center; color: lightpink;"> 1.PopUp </a>
+  
+  <a text="Update" style="position:center; color: lightpink;"> 2.Lag imporvement(less lag) </a>
+  <h6 style="position:center; color: lightpink;">-------------------------------------------------------------</h6>
+  <a text="Version 1.03" style="position:relative; color: lightpink;"> v1 </a>
+  <a text="Updates" style="position:relative; color: lightpink;"> 1.new ui </a>
+   <a text="Updates" style="position:relative; color: lightpink;"> 2.lots of less lag (Shell shocker still has lot) </a>
+   <a text="Updates" style="position:relative; color: lightpink;"> 3.some new update coming soon </a>
+
+   
+
+
+
+   
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <link href="style.css" rel="stylesheet" type="text/css" />
+<!---Text
+--->
+
+  
+<!--end OF TEXT
+  -->
+      <footer>
+  
+  <style>
+.button {
+  display: inline-block;
+  border-radius: 4px;
+  background-color: darkcyan;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 2px;
+  padding: 5px;
+  width: 150;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.button span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -2px;
+  transition: 0.5s;
+}
+
+.button:hover span {
+  padding-right: 25px;
+}
+
+.button:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+</style>
+
+    <style>
+.button {
+  background-color: darkslategray; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.disabled {
+  opacity: 1;
+  cursor: not-allowed;
+}
+</style>
+  
+  <meta name="description" content="" />
+    <meta name="keywords" content="">
+    <meta name="theme-color" media="(prefers-color-scheme: Dark)" content="#434c5e">
+    <meta name="googlebot" content="index, follow, snippet" />
+    <link href="index.css" rel="stylesheet">
+ 
+  
+  <form>
+         
+      </form>
+  
+
+</head>
+   </footer>
+<body>
+ 
+  
+   
+  
+ 
+  
+  
+  
+  <script src="script.js"></script>
+  
+</body>
+
+</html>

@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>My Drive - Google Drive</title>
+    <meta name="description" content="!" />
+    <meta name="keywords" content="">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#434c5e">
+    <meta name="googlebot" content="index, follow, snippet" />
+    <link href="index.css" rel="stylesheet">
+  
+
+
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "What is Ultraviolet (Web Proxy)?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Highly sophisticated proxy used for evading internet censorship or accessing websites in a controlled sandbox using the power of service-workers and more!"
+                }
+            }, {
+                "@type": "Question",
+                "name": "How do I unblock sites using Ultraviolet?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Simply head to an official site featuring Ultraviolet such as Holy Unblocker or Incognito! You can also self-host Ultraviolet on your own web server for maximum privacy."
+                }
+            }, {
+                "@type": "Question",
+                "name": "What if Ultraviolet is blocked or not working?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Join the Titanium Network Discord at discord.gg/unblock!"
+                }
+            }]
+        }
+    </script>
+  <style>
+body {font-family: Arial;}
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+</style>
+  <style>
+  #snowflakeContainer {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    display: none;
+  }
+
+  .snowflake {
+    position: fixed;
+    background-color: #FFFFFF;
+    user-select: none;
+    z-index: 1000;
+    pointer-events: none;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+  }
+</style>
+<div id="snowflakeContainer">
+  <span class="snowflake"></span>
+</div>
+
+<script>
+  // Array to store our Snowflake objects
+  let snowflakes = [];
+
+  // Global variables to store our browser's window size
+  let browserWidth;
+  let browserHeight;
+
+  // Specify the number of snowflakes you want visible
+  let numberOfSnowflakes = 50;
+
+  // Flag to reset the position of the snowflakes
+  let resetPosition = false;
+
+  // Handle accessibility
+  let enableAnimations = false;
+  let reduceMotionQuery = matchMedia("(prefers-reduced-motion)");
+
+  // Handle animation accessibility preferences
+  function setAccessibilityState() {
+    if (reduceMotionQuery.matches) {
+      enableAnimations = false;
+    } else {
+      enableAnimations = true;
+    }
+  }
+  setAccessibilityState();
+
+  reduceMotionQuery.addListener(setAccessibilityState);
+
+  //
+  // It all starts here...
+  //
+  function setup() {
+    if (enableAnimations) {
+      window.addEventListener("DOMContentLoaded", generateSnowflakes, false);
+      window.addEventListener("resize", setResetFlag, false);
+    }
+  }
+  setup();
+
+  //
+  // Constructor for our Snowflake object
+  //
+  class Snowflake {
+    constructor(element, speed, xPos, yPos) {
+      // set initial snowflake properties
+      this.element = element;
+      this.speed = speed;
+      this.xPos = xPos;
+      this.yPos = yPos;
+      this.scale = 1;
+
+      // declare variables used for snowflake's motion
+      this.counter = 0;
+      this.sign = Math.random() < 0.5 ? 1 : -1;
+
+      // setting an initial opacity and size for our snowflake
+      this.element.style.opacity = (0.1 + Math.random()) / 3;
+    }
+
+    // The function responsible for actually moving our snowflake
+    update(delta) {
+      // using some trigonometry to determine our x and y position
+      this.counter += (this.speed / 10000) * delta;
+      this.xPos += (this.sign * delta * this.speed * Math.cos(this.counter)) / 40;
+      this.yPos += Math.sin(this.counter) / 80 + (this.speed * delta) / 50;
+      this.scale = 0.5 + Math.abs((20 * Math.cos(this.counter)) / 20);
+
+      // setting our snowflake's position
+      setTransform(
+        Math.round(this.xPos),
+        Math.round(this.yPos),
+        this.scale,
+        this.element
+      );
+
+      // if snowflake goes below the browser window, move it back to the top
+      if (this.yPos > browserHeight) {
+        this.yPos = -50;
+      }
+    }
+  }
+
+  //
+  // A performant way to set your snowflake's position and size
+  //
+  function setTransform(xPos, yPos, scale, el) {
+    el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0) scale(${scale}, ${scale})`;
+  }
+
+  //
+  // The function responsible for creating the snowflake
+  //
+  function generateSnowflakes() {
+    // get our snowflake element from the DOM and store it
+    let originalSnowflake = document.querySelector(".snowflake");
+
+    // access our snowflake element's parent container
+    let snowflakeContainer = originalSnowflake.parentNode;
+    snowflakeContainer.style.display = "block";
+
+    // get our browser's size
+    browserWidth = document.documentElement.clientWidth;
+    browserHeight = document.documentElement.clientHeight;
+
+    // create each individual snowflake
+    for (let i = 0; i < numberOfSnowflakes; i++) {
+      // clone our original snowflake and add it to snowflakeContainer
+      let snowflakeClone = originalSnowflake.cloneNode(true);
+      snowflakeContainer.appendChild(snowflakeClone);
+
+      // set our snowflake's initial position and related properties
+      let initialXPos = getPosition(50, browserWidth);
+      let initialYPos = getPosition(50, browserHeight);
+      let speed = (5 + Math.random() * 40) * delta;
+
+      // create our Snowflake object
+      let snowflakeObject = new Snowflake(
+        snowflakeClone,
+        speed,
+        initialXPos,
+        initialYPos
+      );
+      snowflakes.push(snowflakeObject);
+    }
+
+    // remove the original snowflake because we no longer need it visible
+    snowflakeContainer.removeChild(originalSnowflake);
+
+    requestAnimationFrame(moveSnowflakes);
+  }
+
+  //
+  // Responsible for moving each snowflake by calling its update function
+  //
+  let frames_per_second = 60;
+  let frame_interval = 1000 / frames_per_second;
+
+  let previousTime = performance.now();
+  let delta = 1;
+
+  function moveSnowflakes(currentTime) {
+    delta = (currentTime - previousTime) / frame_interval;
+
+    if (enableAnimations) {
+      for (let i = 0; i < snowflakes.length; i++) {
+        let snowflake = snowflakes[i];
+        snowflake.update(delta);
+      }
+    }
+
+    previousTime = currentTime;
+
+    // Reset the position of all the snowflakes to a new value
+    if (resetPosition) {
+      browserWidth = document.documentElement.clientWidth;
+      browserHeight = document.documentElement.clientHeight;
+
+      for (let i = 0; i < snowflakes.length; i++) {
+        let snowflake = snowflakes[i];
+
+        snowflake.xPos = getPosition(50, browserWidth);
+        snowflake.yPos = getPosition(50, browserHeight);
+      }
+
+      resetPosition = false;
+    }
+
+    requestAnimationFrame(moveSnowflakes);
+  }
+
+  //
+  // This function returns a number between (maximum - offset) and (maximum + offset)
+  //
+  function getPosition(offset, size) {
+    return Math.round(-1 * offset + Math.random() * (size + 2 * offset));
+  }
+
+  //
+  // Trigger a reset of all the snowflakes' positions
+  //
+  function setResetFlag(e) {
+    resetPosition = true;
+  }
+</script>
+ <style>
+body {
+  font-family: 'Lato', sans-serif;
+}
+
+.overlay {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0, 0.9);
+  overflow-x: hidden;
+  transition: 0.5s;
+}
+
+.overlay-content {
+  position: relative;
+  top: 25%;
+  width: 100%;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.overlay a {
+  padding: 8px;
+  text-decoration: none;
+  font-size: 36px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.overlay a:hover, .overlay a:focus {
+  color: #f1f1f1;
+}
+
+.overlay .closebtn {
+  position: absolute;
+  top: 20px;
+  right: 45px;
+  font-size: 60px;
+}
+
+@media screen and (max-height: 450px) {
+  .overlay a {font-size: 20px}
+  .overlay .closebtn {
+  font-size: 40px;
+  top: 15px;
+  right: 35px;
+  }
+}
+</style>
+  
+<style>
+  .alert {
+  padding: 20px;
+  background-color: #f44336;
+  color: white;
+  opacity: 1;
+  transition: opacity 0.6s;
+  margin-bottom: 15px;
+}
+
+.alert.success {background-color: #04AA6D;}
+.alert.info {background-color: #3399FF}
+.alert.warning {background-color: #ff9800;}
+
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.closebtn:hover {
+  color: black;
+}
+</style>
+<style>
+      #bottom {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+      }
+    </style>
+   
+</div>
+
+
+
+<script>
+var close = document.getElementsByClassName("closebtn");
+var i;
+
+for (i = 0; i < close.length; i++) {
+  close[i].onclick = function(){
+    var div = this.parentElement;
+    div.style.opacity = "0";
+    setTimeout(function(){ div.style.display = "none"; }, 600);
+  }
+}
+
+  
+</script>
+</head>   
+  <body style="background-color:#373737;">
+<link rel="stylesheet" href="style.css">
+<body>
+
+<div id="myNav" class="overlay">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <div class="overlay-content">
+    <a><h1>DeployUnblocker</h1></a>
+    <a href="index.html">Home</a>
+     <a href="Team.html">Credit's</a>
+    <a href="Events.html">Events!!</a>
+    <a href="Update log.html">Update log</a>
+     <a href="Unblock.html">Unblocker(only members)</a>
+    <a href="https://discord.gg/HUmbMbpt73">Join our discord Server</a>
+  </div>
+</div>
+
+<h2 style="position:relative; color: #E0E0E0;">DeployUnblocker</h2>
+
+<a style="position:relative; color: #E0E0E0;"><span  style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Menu</span></a>
+
+    
+        <form>
+        
+      
+          
+        </form>
+  <h1 style="position:relative; color: white;">Game of the week</h1>
+    <table border="0" cellpadding="1" cellspacing="1" class="table">
+        <tbody>
+            <tr>
+                <td align="center"><a href="Minecraft.html"><button><img src="../assest/minecraft.png" width="169" height="169"></button></a></td>
+  
+  <td align="center"><a href="https://soemthinghturfuher938fhejdhfoeihfodhieosdkfhosdhiffhheuhf.discover-fake.repl.co/service/hvtrs8%2F-sjenlqhmci.ko-"><button><img src="../assest/Shellshocker.png" width="169" height="169"></button></a></td>
+
+               <td align="center"><a href="Snakeio.html"><button><img src="../assest/Snakeio.png" width="169" height="169"></button></a></td>
+              
+   <table border="0" cellpadding="5" cellspacing="5" class="table">
+      </tr>
+        </tbody>
+    </table>
+
+<script>
+function openNav() {
+  document.getElementById("myNav").style.width = "100%";
+}
+
+function closeNav() {
+  document.getElementById("myNav").style.width = "0%";
+}
+</script>
+
+  
+    <div title="Ultraviolet Logo" class="logo-wrapper">
+        <img class="logo" src=""
+            alt="" />
+      
+    </div>
+    <div title="Yes" class="desc">
+        
+       </div>
+    <form>
+        
+    </form>
+    <footer>
+      
+<style>
+.buttons {
+  display: inline-block;
+  border-radius: 4px;
+  background-color: darkcyan;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 2px;
+  padding: 5px;
+  width: 100;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.buttons span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.buttons span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -2px;
+  transition: 0.5s;
+}
+
+.buttons:hover span {
+  padding-right: 25px;
+}
+
+.buttons:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+</style>
+
+    <style>
+.buttons {
+  background-color: darkred; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 12px;
+  text-align: right;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.disabled {
+  opacity: 1;
+  cursor: not-allowed;
+}
+</style>
+
+  <style>
+.buttonss {
+  display: inline-block;
+  border-radius: 4px;
+  background-color: darkcyan;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 2px;
+  padding: 5px;
+  width: 100;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.buttonss span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.buttonss span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -2px;
+  transition: 0.5s;
+}
+
+.buttonss:hover span {
+  padding-right: 25px;
+}
+
+.buttonss:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+</style>
+
+     <style>
+.buttons {
+  background-color: green; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.disabled {
+  opacity: 1;
+  cursor: not-allowed;
+}
+</style>
+        
+     <style>
+.buttons {
+  display: inline-block;
+  border-radius: 4px;
+  background-color: darkcyan;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 2px;
+  padding: 5px;
+  width: 100;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.button span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -2px;
+  transition: 0.5s;
+}
+
+.button:hover span {
+  padding-right: 25px;
+}
+
+.button:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+</style>
+
+    <style>
+.button {
+  background-color: darkslategray; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.disabled {
+  opacity: 1;
+  cursor: not-allowed;
+}
+</style>
+
+  <style>
+.buttons {
+  display: inline-block;
+  border-radius: 4px;
+  background-color: darkcyan;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 2px;
+  padding: 5px;
+  width: 100;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.buttons span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.buttons span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -2px;
+  transition: 0.5s;
+}
+
+.buttons:hover span {
+  padding-right: 25px;
+}
+
+.buttons:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+</style>
+
+     <style>
+.buttons {
+  background-color: darkred; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.disabled {
+  opacity: 1;
+  cursor: not-allowed;
+}
+</style>
+
+
+
+      
+  
+   </form>   
+    </footer>
+    <script src="uv/uv.bundle.js"></script>
+    <script src="uv/uv.config.js"></script>
+    <script src="index.js"></script>
+</body>
+
+</html>
