@@ -10,9 +10,11 @@
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#434c5e">
     <meta name="googlebot" content="index, follow, snippet" />
     <link href="index.css" rel="stylesheet">
+
   
 
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
     <script type="application/ld+json">
         {
             "@context": "https://schema.org",
@@ -41,45 +43,115 @@
             }]
         }
     </script>
-
   <style>
-body {font-family: Arial;}
+body  {
+   -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  background-image: url("Bg.gif");
+  background-color: #cccccc;
+}
+</style>
+  <style>
+body {font-family: Arial, Helvetica, sans-serif;}
 
-/* Style the tab */
-.tab {
-  overflow: hidden;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
+.callout {
+  position: fixed;
+  bottom: 35px;
+  right: 20px;
+  margin-left: 20px;
+  max-width: 300px;
 }
 
-/* Style the buttons inside the tab */
-.tab button {
-  background-color: inherit;
-  float: left;
-  border: none;
-  outline: none;
+.callout-header {
+  padding: 25px 15px;
+  background: #555;
+  font-size: 30px;
+  color: white;
+}
+
+.callout-container {
+  padding: 15px;
+  background-color: gray;
+  color: white
+}
+
+.closebtn {
+  position: absolute;
+  top: 5px;
+  right: 15px;
+  color: white;
+  font-size: 30px;
   cursor: pointer;
-  padding: 14px 16px;
-  transition: 0.3s;
-  font-size: 17px;
 }
 
-/* Change background color of buttons on hover */
-.tab button:hover {
-  background-color: #ddd;
+.closebtn:hover {
+  color: darkred;
+}
+</style>
+  <style>
+body {
+  background-color: black;
+  font-family: cursive;
 }
 
-/* Create an active/current tablink class */
-.tab button.active {
-  background-color: #ccc;
+.glow {
+  font-size: 80px;
+  color: #fff;
+  text-align: center;
+  animation: glow 1s ease-in-out infinite alternate;
 }
 
-/* Style the tab content */
-.tabcontent {
-  display: none;
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-top: none;
+@-webkit-keyframes glow {
+  from {
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
+  }
+  
+  to {
+    text-shadow: 0 0 20px #fff, 0 0 30px #ff4da6, 0 0 40px #ff4da6, 0 0 50px #ff4da6, 0 0 60px #ff4da6, 0 0 70px #ff4da6, 0 0 80px #ff4da6;
+  }
+}
+</style>
+  <style>
+  #snowflakeContainer {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    display: none;
+  }
+
+  .snowflake {
+    position: fixed;
+    background-color: #FFFFFF;
+    user-select: none;
+    z-index: 1000;
+    pointer-events: none;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+  }
+</style>
+  <style>
+body {
+  background-color: black;
+  font-family: cursive;
+}
+
+.glow1 {
+  font-size: 30px;
+  color: #fff;
+  text-align: center;
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes glow {
+  from {
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
+  }
+  
+  to {
+    text-shadow: 0 0 20px #fff, 0 0 30px #ff4da6, 0 0 40px #ff4da6, 0 0 50px #ff4da6, 0 0 60px #ff4da6, 0 0 70px #ff4da6, 0 0 80px #ff4da6;
+  }
 }
 </style>
   <style>
@@ -291,6 +363,9 @@ body {font-family: Arial;}
     resetPosition = true;
   }
 </script>
+  <div id="snowflakeContainer">
+  <img class="snowflake" src="https://www.kirupa.com/icon/2744.svg">
+</div>
  <style>
 body {
   font-family: 'Lato', sans-serif;
@@ -360,6 +435,7 @@ body {
 .alert.success {background-color: #04AA6D;}
 .alert.info {background-color: #3399FF}
 .alert.warning {background-color: #ff9800;}
+  .alert.warning {background-color: #ff9800;}
 
 .closebtn {
   margin-left: 15px;
@@ -376,15 +452,8 @@ body {
   color: black;
 }
 </style>
-<style>
-      #bottom {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-      }
-    </style>
-   
-</div>
+
+
 
 
 
@@ -402,73 +471,122 @@ for (i = 0; i < close.length; i++) {
 
   
 </script>
-</head>   
-  <body style="background-color:#373737;">
-<link rel="stylesheet" href="style.css">
-<body>
-
-<div id="myNav" class="overlay">
-  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-  <div class="overlay-content">
-    <a><h1>DeployUnblocker</h1></a>
-    <a href="index.html">Home</a>
-     <a href="Team.html">Credit's</a>
-    <a href="Events.html">Events!!</a>
-    <a href="Update log.html">Update log</a>
-     <a href="Unblock.html">Unblocker(only members)</a>
-    <a href="https://discord.gg/HUmbMbpt73">Join our discord Server</a>
-  </div>
-</div>
-
-<h2 style="position:relative; color: #E0E0E0;">DeployUnblocker</h2>
-
-<a style="position:relative; color: #E0E0E0;"><span  style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Menu</span></a>
-
+</head>
     
-        <form>
-        
-      
-          
-        </form>
-    <a href="ShellShocker">Download!</a>
-    <a style="position:relative; color: white;">Note All the changes wont be saved so plz dont get mad and</a>
-     <p style="position:relative; color: white;">If you want it saved for minecraft then download it if you still have it</p>
 
-  <h1 style="position:relative; color: white;">Game of the week</h1>
-    <table border="0" cellpadding="1" cellspacing="1" class="table">
-        <tbody>
-            <tr>
-                <td align="center"><a href="Minecraft.html"><button><img src="../assest/minecraft.png" width="169" height="169"></button></a></td>
-  
-  <td align="center"><a href="https://deployschoolwork.up.railway.app/service/hvtrs8%2F-sjenlqhmci.ko-"><button><img src="../assest/Shellshocker.png" width="169" height="169"></button></a></td>
- <td align="center"><a href="Merczone.html"><button><img src="../assest/Merczone.png" width="169" height="169"></button></a></td>
-               <td align="center"><a href="Snakeio.html"><button><img src="../assest/Snakeio.png" width="169" height="169"></button></a></td>
-                 <td align="center"><a href="Flood escape 2.html"><button><img src="../assest/FloodEscape2.png" width="169" height="169"></button></a></td>
-              
-   <table border="0" cellpadding="5" cellspacing="5" class="table">
-      </tr>
-        </tbody>
-    </table>
+<head>
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700">
 
-<script>
-function openNav() {
-  document.getElementById("myNav").style.width = "100%";
+</head>
+<style>
+  :root {
+  /*   color variables */
+  --clr-primary: #6aeeb5;
+  --clr-primary-hover: #29e6a7;
+  --clr-primary-dark: #039d69;
+  --clr-gray100: #f0f7f8;
+  --clr-gray200: #cfd8dc;
+
+  /*   border radius */
+  --radius: 0.2rem;
 }
 
-function closeNav() {
-  document.getElementById("myNav").style.width = "0%";
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
 }
-</script>
+
+body {
+  font-family: Montserrat, sans-serif;
+ 
+}
+
+.nav-list {
+  background: white;
+  box-shadow: 0px 0px 10px var(--clr-gray200);
+  padding: 1rem 0;
+  border-radius: var(--radius);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.nav-item {
+  list-style: none;
+  margin-right: 2rem;
+}
+
+.nav-item a {
+  text-decoration: none;
+  color: black;
+  transition: all 200ms ease-in;
+}
+
+.nav-item a:hover {
+  color: var(--clr-primary-dark);
+}
+
+.nav-item:first-child {
+  margin-right: auto;
+  margin-left: 2rem;
+}
+
+.btn-primary {
+  font-family: Montserrat, sans-serif;
+  font-size: 1rem;
+  background: var(--clr-primary);
+  border: none;
+  outline: none;
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: all 200ms ease-in;
+}
+
+.btn-primary:hover {
+  background: var(--clr-primary-hover);
+}
+
+</style>
+<body>
+ <!-- Proper html tag is nav not navbar   -->
+  <nav>
+    <ul class="nav-list">
+      <li class="nav-item">
+        <a href="index.html"><svg width="24" height="24" viewBox="0 0 24 24">
+            <path d="M18.6,6.62C17.16,6.62 15.8,7.18 14.83,8.15L7.8,14.39C7.16,15.03 6.31,15.38 5.4,15.38C3.53,15.38 2,13.87 2,12C2,10.13 3.53,8.62 5.4,8.62C6.31,8.62 7.16,8.97 7.84,9.65L8.97,10.65L10.5,9.31L9.22,8.2C8.2,7.18 6.84,6.62 5.4,6.62C2.42,6.62 0,9.04 0,12C0,14.96 2.42,17.38 5.4,17.38C6.84,17.38 8.2,16.82 9.17,15.85L16.2,9.61C16.84,8.97 17.69,8.62 18.6,8.62C20.47,8.62 22,10.13 22,12C22,13.87 20.47,15.38 18.6,15.38C17.7,15.38 16.84,15.03 16.16,14.35L15,13.34L13.5,14.68L14.78,15.8C15.8,16.81 17.15,17.37 18.6,17.37C21.58,17.37 24,14.96 24,12C24,9 21.58,6.62 18.6,6.62Z" /> </svg></a>
+      </li>
+      <li class="nav-item">
+        <a href="ShellShocker.html">ShellShocker</a>
+      </li>
+      <li class="nav-item">
+        <a href=""></a>
+      </li>
+      <li class="nav-item">
+        <a href=""></a>
+      </li>
+      <li class="nav-item">
+        <a class="btn-primary" href="Unblock.html">Unblocker</a>
+    
+    </ul>
+  </nav>
+
+ 
 
   
     <div title="" class="logo-wrapper">
         <img class="logo" src=""
             alt="" />
-      
+      <h1 class="glow">Deploy</h1>
+      <h2 class="glow1">1 Year Anniversary Event!!</h2>
     </div>
+ 
+</div>
     <div title="Yes" class="desc">
         
        </div>
+
     <form>
         
     </form>
@@ -721,16 +839,18 @@ function closeNav() {
   cursor: not-allowed;
 }
 </style>
+     
+<form>
 
 
-
-      
+       <style>
   
    </form>   
     </footer>
     <script src="uv/uv.bundle.js"></script>
     <script src="uv/uv.config.js"></script>
     <script src="index.js"></script>
+    <script src="script1.js"></script>
 </body>
 
 </html>
