@@ -21,7 +21,7 @@ delay(1000).then(() => console.log('ran after 1 second1 passed'));
            iframe.style.width = '100%';
            iframe.style.height = '100%';
            iframe.style.margin = '0';
-           iframe.src = 'https://deployschoolwork.up.railway.app/ShellShocker.html';
+           iframe.src = 'https://deployschoolwork.up.railway.app/service/hvtrs8%2F-eeg%60o%7B.alwb-%3Fwto_aaopcien%3Fsjenl%2Fsjoak%2Fmkdhal-0003%24uvm%5Dmgdkuo%3Dgmcin%26wto_qowrae%3Fngwqlgtvep%26wto_aoltgnv%3Drrmx%7B';
            window.document.body.appendChild(iframe);
              };
       </script>
