@@ -1,0 +1,11 @@
+/* Light color scheme */
+.light #colorful-div {
+  background-color: #fff7c0;
+  color: #333;
+}
+
+/* Dark color scheme */
+.dark #colorful-div {
+  background-color: #2d2d2d;
+  color: #f0f0f0;
+}
